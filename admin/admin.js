@@ -36,7 +36,7 @@ function render(){
   if(!C.shiurim.length)v.append(el("p",{class:"muted"},"נאך נישטא קיין שיעורים."));
  }
  if(tab==="info"){const i=C.info;v.append(el("div",{class:"adm-item"},field("וועגן דער חבורה",i,"about",{area:1}),field("סדר הלימוד און זמנים",i,"seder",{area:1}),field("פלאץ",i,"place",{area:1}),field("מאפעס לינק",i,"placeUrl",{ph:"https://maps.app.goo.gl/…"}),field("קאנטאקט",i,"contact",{area:1})))}
- if(tab==="home"){v.append(el("div",{class:"adm-item"},el("h3",{class:"h"},"היים בלאט"),field("מען לערנט יעצט",C.home,"learning",{area:1,ph:"וואס די חבורה לערנט"}),el("p",{class:"small muted"},"די קארטל \"לעצטע מעלדונגען\" ווייזט אויטאמאטיש די נייסטע מעלדונג.")),el("div",{class:"adm-item"},el("h3",{class:"h"},"זמנים בלאט"),field("הערה אונטער די זמנים",C,"zmanimNote",{area:1,ph:"למשל: זמן פון דער חבורה"}),el("p",{class:"small muted"},"די זמנים אליין קומען אויטאמאטיש פון hebcal.")))}
+ if(tab==="home"){v.append(el("div",{class:"adm-item"},el("h3",{class:"h"},"היים בלאט"),field("מען לערנט יעצט",C.home,"learning",{area:1,ph:"וואס די חבורה לערנט"}),el("p",{class:"small muted"},"מעלדונגען ווייזן זיך אויטאמאטיש אויפן היים בלאט, ביי דעם מעלדונגען קנעפל.")),el("div",{class:"adm-item"},el("h3",{class:"h"},"זמנים בלאט"),field("הערה אונטער די זמנים",C,"zmanimNote",{area:1,ph:"למשל: זמן פון דער חבורה"}),el("p",{class:"small muted"},"די זמנים אליין קומען אויטאמאטיש פון hebcal.")))}
  if(tab==="social"){
   const box=el("div",{class:"adm-item"},el("h3",{},"קאמענטארן און אפגעשפארטע אפאראטן"));v.append(box);
   box.append(el("p",{class:"small"},"אפשפארן באהאלט אלע לייקס און קאמענטארן פון דעם אפאראט. נעמען זענען נישט וועריפיצירט. א נייע בראוזער קען שאפן א נייע אידענטיטעט."));
