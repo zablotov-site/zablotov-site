@@ -1,6 +1,7 @@
 .git
 node_modules
 functions
+migrations
 tests
 wrangler.toml
 README.md

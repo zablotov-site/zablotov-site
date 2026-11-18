@@ -105,3 +105,23 @@ export async function readUpload(env, token) {
     return c;
   } catch { return null; }
 }
+async function deviceKey(env) {
+  const secret=await env.FILES.get("social:secret");
+  if(!secret)throw new Error("Device signing key unavailable");
+  return crypto.subtle.importKey("raw",enc.encode(secret),{name:"HMAC",hash:"SHA-256"},false,["sign"]);
+}
+export async function deviceToken(env,id) {
+  const body=b64u(btoa(JSON.stringify({id,exp:Date.now()+365*864e5})));
+  const sig=b64u(b64(await crypto.subtle.sign("HMAC",await deviceKey(env),enc.encode("device:"+body))));
+  return body+"."+sig;
+}
+export async function deviceId(ctx) {
+  try {
+    const t=/(?:^|;\s*)zb_device=([^;]+)/.exec(ctx.request.headers.get("cookie")||"");
+    if(!t)return null;const [body,sig]=t[1].split(".");
+    const good=b64u(b64(await crypto.subtle.sign("HMAC",await deviceKey(ctx.env),enc.encode("device:"+body))));
+    if(!sig||!safeEq(enc.encode(good),enc.encode(sig)))return null;
+    const c=JSON.parse(atob(body.replace(/-/g,"+").replace(/_/g,"/")));
+    return c.exp>Date.now()&&/^[a-f0-9-]{36}$/.test(c.id)?c.id:null;
+  }catch{return null}
+}
