@@ -6,3 +6,7 @@ pages_build_output_dir = "."
 [[kv_namespaces]]
 binding = "FILES"
 id = "65ff50594fc04e169f657f0410414203"
+
+[[r2_buckets]]
+binding = "MEDIA"
+bucket_name = "zablotov-media"

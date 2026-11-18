@@ -1,6 +1,6 @@
 (()=>{
 const $=(s)=>document.querySelector(s);
-let C=null,tab="meldungen",dirty=false;
+let C=null,tab="meldungen",dirty=false,uploading=false;
 const H={"x-zb-admin":"1"};
 async function api(path,opt={}){const r=await fetch(path,{...opt,headers:{...H,...(opt.headers||{})},credentials:"same-origin"});let j={};try{j=await r.json()}catch{}if(!r.ok)throw Object.assign(new Error(j.error||"err"),{status:r.status,j});return j}
 function el(t,a={},...k){const e=document.createElement(t);for(const[n,v]of Object.entries(a)){if(n==="class")e.className=v;else if(n.startsWith("on"))e.addEventListener(n.slice(2),v);else if(v!==false&&v!=null)e.setAttribute(n,v)}k.flat().forEach(x=>e.append(x));return e}
@@ -30,9 +30,32 @@ function render(){
    const sel=el("select",{},...[["audio","אודיא"],["video","וידעא"],["link","לינק"]].map(([k,n])=>el("option",{value:k,selected:m.kind===k},n)));sel.addEventListener("change",()=>{m.kind=sel.value;dirty=true});
    const fi=el("input",{type:"file",accept:"audio/*,video/*,application/pdf"});
    fi.addEventListener("change",async()=>{const f=fi.files[0];if(!f)return;status("לאדט ארויף…");
-    try{const r=await api("/api/admin/upload",{method:"POST",body:f,headers:{"content-type":f.type||"application/octet-stream"}});m.url=r.url;if(f.type.startsWith("video"))m.kind="video";else if(f.type.startsWith("audio"))m.kind="audio";dirty=true;status("אפגעלאדן - שפייכער נאך");render()}
-    catch(e){status(e.j&&e.j.error==="toobig"?"דער פייל איז צו גרויס (מאקס 24MB) - נוץ א לינק":"נישט געלונגען צו לאדן ארויף",1)}});
-   v.append(el("div",{class:"adm-item"},field("טיטל",m,"title"),field("רבי / מגיד שיעור",m,"author"),dateField(m),field("באשרייבונג",m,"desc",{area:1}),el("label",{},"סארט",sel),field("לינק צום פייל",m,"url",{ph:"https://… אדער לאד ארויף אונטן"}),el("label",{},"אדער לאד ארויף א פייל (עד 24MB)",fi),itemBar(C.shiurim,i)))});
+    uploading=true;
+    const locks=[...document.querySelectorAll("#panel input,#panel textarea,#panel select,#panel button")].map(e=>[e,e.disabled]);locks.forEach(([e])=>e.disabled=true);
+    let session=null;
+    try{
+     if(f.size>5*1024*1024*1024)throw Object.assign(new Error("toobig"),{j:{error:"toobig"}});
+     const known={mp3:"audio/mpeg",m4a:"audio/mp4",aac:"audio/aac",wav:"audio/wav",ogg:"audio/ogg",flac:"audio/flac",mp4:"video/mp4",mov:"video/quicktime",webm:"video/webm",pdf:"application/pdf"};
+     const type=f.type||known[f.name.split(".").pop().toLowerCase()]||"application/octet-stream";
+     session=await api("/api/admin/upload?action=create",{method:"POST",body:JSON.stringify({type,size:f.size})});
+     const parts=[];
+     for(let offset=0,n=1;offset<f.size;offset+=session.chunkSize,n++){
+      const body=f.slice(offset,Math.min(offset+session.chunkSize,f.size));
+      let part;
+      for(let attempt=0;attempt<3;attempt++){
+       try{part=await api("/api/admin/upload?action=part&part="+n,{method:"PUT",headers:{"x-zb-upload":session.token},body});break}
+       catch(e){if(attempt===2||e.status===401||e.status===403)throw e;await new Promise(r=>setTimeout(r,1000*(attempt+1)))}
+      }
+      parts.push(part);status("לאדט ארויף… "+Math.round(Math.min(offset+session.chunkSize,f.size)/f.size*100)+"%");
+     }
+     const r=await api("/api/admin/upload?action=complete",{method:"POST",headers:{"x-zb-upload":session.token},body:JSON.stringify({parts})});
+     session=null;m.url=r.url;if(type.startsWith("video"))m.kind="video";else if(type.startsWith("audio"))m.kind="audio";dirty=true;status("אפגעלאדן - שפייכער נאך");render();
+    }catch(e){
+     if(session)try{await api("/api/admin/upload?action=abort",{method:"POST",headers:{"x-zb-upload":session.token}})}catch{}
+     status(e.j&&e.j.error==="toobig"?"דער פייל איז צו גרויס (מאקס 5GB)":e.j&&e.j.error==="type"?"דער סארט פייל ווערט נישט געשטיצט":"נישט געלונגען צו לאדן ארויף - פרוביר נאכאמאל",1);
+    }finally{uploading=false;locks.forEach(([e,disabled])=>{if(e.isConnected)e.disabled=disabled})}
+   });
+   v.append(el("div",{class:"adm-item"},field("טיטל",m,"title"),field("רבי / מגיד שיעור",m,"author"),dateField(m),field("באשרייבונג",m,"desc",{area:1}),el("label",{},"סארט",sel),field("לינק צום פייל",m,"url",{ph:"https://… אדער לאד ארויף אונטן"}),el("label",{},"אדער לאד ארויף א פייל (ביז 5GB)",fi),itemBar(C.shiurim,i)))});
   if(!C.shiurim.length)v.append(el("p",{class:"muted"},"נאך נישטא קיין שיעורים."));
  }
  if(tab==="info"){const i=C.info;v.append(el("div",{class:"adm-item"},field("וועגן דער חבורה",i,"about",{area:1}),field("סדר הלימוד און זמנים",i,"seder",{area:1}),field("פלאץ",i,"place",{area:1}),field("מאפעס לינק",i,"placeUrl",{ph:"https://maps.app.goo.gl/…"}),field("קאנטאקט",i,"contact",{area:1})))}
@@ -51,6 +74,6 @@ $("#lf").addEventListener("submit",async e=>{e.preventDefault();$("#lerr").hidde
  catch(x){const m=$("#lerr");m.textContent=x.status===429?"צו פיל פראבירט - וואַרט 15 מינוט":x.status===401?"פאלשער יוזערניים אדער פאסווארד - קוק מיט ווייז פאסווארד":"פארבינדונג נישט געלונגען - פרוביר נאכאמאל";m.hidden=false}});
 $("#save").addEventListener("click",save);
 $("#out").addEventListener("click",async()=>{await api("/api/admin/logout",{method:"POST"});show(false)});
-window.addEventListener("beforeunload",e=>{if(dirty){e.preventDefault();e.returnValue=""}});
+window.addEventListener("beforeunload",e=>{if(dirty||uploading){e.preventDefault();e.returnValue=""}});
 api("/api/admin/me").then(async r=>{if(r.admin){await load();show(true)}else show(false)}).catch(()=>show(false));
 })();

@@ -87,3 +87,21 @@ export function sanitize(c) {
   out.updated = Date.now();
   return out;
 }
+
+// Upload claims are signed separately from session cookies and expire after a day.
+export async function signUpload(env, claims) {
+  const body = b64u(btoa(JSON.stringify(claims)));
+  const sig = b64u(b64(await crypto.subtle.sign("HMAC", await hmacKey(env), enc.encode("upload:"+body))));
+  return body+"."+sig;
+}
+export async function readUpload(env, token) {
+  try {
+    if (typeof token !== "string" || token.length>4000) return null;
+    const [body,sig] = token.split(".");
+    const good = b64u(b64(await crypto.subtle.sign("HMAC",await hmacKey(env),enc.encode("upload:"+body))));
+    if (!sig || !safeEq(enc.encode(good),enc.encode(sig))) return null;
+    const c = JSON.parse(atob(body.replace(/-/g,"+").replace(/_/g,"/")));
+    if (c.exp<Date.now() || !/^f\/u\/[a-f0-9-]+\.[a-z0-9]+$/.test(c.key) || !c.uploadId || !Number.isSafeInteger(c.size)) return null;
+    return c;
+  } catch { return null; }
+}
