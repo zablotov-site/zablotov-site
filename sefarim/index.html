@@ -132,7 +132,8 @@ document.querySelectorAll("article.sefer").forEach(function(a){
 })();
 </script>
 <style>
-a.bm-cont{background:#fff !important;color:var(--purple) !important;box-shadow:inset 0 0 0 1.5px var(--purple)}
+a.bm-cont{background:#fff !important;color:var(--purple) !important;box-shadow:inset 0 0 0 1.5px var(--purple);flex-basis:100%;justify-content:flex-start}
+.vol{flex-wrap:wrap}
 </style>
 <script>
 (function(){
@@ -147,7 +148,7 @@ a.bm-cont{background:#fff !important;color:var(--purple) !important;box-shadow:i
     u.searchParams.set("p", bm.p);
     c.href = u.pathname + u.search;
     c.textContent = "🔖 גיי ווייטער וואו איך האב אויפגעהערט (בלאט " + bm.p + ")";
-    a.insertAdjacentElement("afterend", c);
+    a.parentElement.appendChild(c);
   });
 })();
 </script></body></html>

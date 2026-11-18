@@ -30,7 +30,18 @@ const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting
 holders.forEach(h => io.observe(h));
 const wantP = +qs.get("p") || 0;
 const last = (wantP >= 1 && wantP <= doc.numPages) ? wantP : (+localStorage.getItem(key) || 1);
-if (last > 1) holders[last - 1].scrollIntoView();
+if (last > 1) {
+  const target = holders[last - 1];
+  const anchor = () => { target.scrollIntoView(); window.scrollBy(0, -56); };
+  anchor();
+  // pages above render lazily and grow, shifting the target down; re-anchor until layout settles
+  let lastTop = -1, stable = 0;
+  const iv = setInterval(() => {
+    if (target.offsetTop !== lastTop) { lastTop = target.offsetTop; anchor(); stable = 0; }
+    else if (++stable > 4) clearInterval(iv);
+  }, 300);
+  setTimeout(() => clearInterval(iv), 12000);
+}
 const bmBtn = document.getElementById("bm");
 bmBtn.onclick = () => {
   const y = window.scrollY + 120;
