@@ -1,0 +1,12 @@
+name = "zablotov"
+compatibility_date = "2026-11-01"
+pages_build_output_dir = "."
+
+[[d1_databases]]
+binding = "DB"
+database_name = "zbchat"
+database_id = "0a869527-a9b2-46ca-b82f-90c74754b757"
+
+[[kv_namespaces]]
+binding = "FILES"
+id = "65ff50594fc04e169f657f0410414203"

@@ -1,0 +1,47 @@
+<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ספר דרך ה׳ – עם פירוש באידיש · Chevras Zablotov</title>
+<style>body{margin:0;background:#3b3020;font-family:system-ui,sans-serif}
+.bar{position:sticky;top:0;z-index:3;display:flex;gap:6px;align-items:center;background:#6b4f12;color:#fff3cf;padding:8px 10px}
+.bar b{flex:1;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar a,.bar button{color:#fff3cf;background:#0000;border:1px solid #e9cf86;border-radius:8px;padding:5px 9px;font-size:14px;text-decoration:none}
+#pg{display:flex;flex-direction:column;align-items:center;gap:10px;padding:10px 0 40px}
+canvas{max-width:100%;background:#fff;box-shadow:0 2px 8px #0008}
+.ld{color:#f2dc9a;padding:30px;text-align:center}
+#jump{width:70px;font-size:14px;padding:4px;border-radius:6px;border:0}</style></head><body>
+<div class="bar"><a href="/sefarim">← Sforim</a><b>ספר דרך ה׳ – עם פירוש באידיש</b><input id="jump" type="number" min="1" placeholder="Page"><button id="zm">+</button><button id="zo">−</button><button id="bm">🔖 צייכן וואו איך האלט</button><a href="/f/s/mwd6ktk9c7r9eawy78.pdf" download>⬇</a></div>
+<div id="pg"><div class="ld">Loading… (a big sefer can take a few seconds)</div></div>
+<script type="module">
+import * as pdfjsLib from "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.4.168/build/pdf.min.mjs";
+pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.4.168/build/pdf.worker.min.mjs";
+const qs=new URLSearchParams(location.search);const F=qs.get("f")||"s/mwd6ktk9c7r9eawy78.pdf";const T=qs.get("t")||"ספר";document.title=T+" · Chevras Zablotov";document.querySelector(".bar b").textContent=T;document.querySelector(".bar a[download]").href="/f/"+F;const key = "lern:" + F; const bmKey = "zbbm:" + F;
+let scale = parseFloat(localStorage.getItem("lernZoom") || "1");
+const box = document.getElementById("pg");
+const doc = await pdfjsLib.getDocument({ url: "/f/"+F, disableAutoFetch: true, disableStream: false }).promise;
+box.innerHTML = "";
+const holders = [];
+for (let i = 1; i <= doc.numPages; i++) { const d = document.createElement("div"); d.dataset.p = i; d.style.minHeight = "60vh"; d.style.width = "100%"; d.style.display = "flex"; d.style.justifyContent = "center"; box.appendChild(d); holders.push(d); }
+const done = new Set();
+async function render(d) { const i = +d.dataset.p; if (done.has(i)) return; done.add(i);
+  const page = await doc.getPage(i); const w = Math.min(window.innerWidth - 8, 900) * scale;
+  const vp0 = page.getViewport({ scale: 1 }); const vp = page.getViewport({ scale: (w / vp0.width) * (window.devicePixelRatio || 1) });
+  const c = document.createElement("canvas"); c.width = vp.width; c.height = vp.height; c.style.width = w + "px";
+  await page.render({ canvasContext: c.getContext("2d"), viewport: vp }).promise; d.style.minHeight = ""; d.innerHTML = ""; d.appendChild(c); }
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { render(e.target); localStorage.setItem(key, e.target.dataset.p); } }), { rootMargin: "800px" });
+holders.forEach(h => io.observe(h));
+const wantP = +qs.get("p") || 0;
+const last = (wantP >= 1 && wantP <= doc.numPages) ? wantP : (+localStorage.getItem(key) || 1);
+if (last > 1) holders[last - 1].scrollIntoView();
+const bmBtn = document.getElementById("bm");
+bmBtn.onclick = () => {
+  const y = window.scrollY + 120;
+  let p = 1;
+  for (const h of holders) { if (h.offsetTop <= y) p = +h.dataset.p; else break; }
+  localStorage.setItem(bmKey, JSON.stringify({ p, t: T, at: Date.now() }));
+  bmBtn.textContent = "✓ אויפגעהיט בלאט " + p;
+  setTimeout(() => { bmBtn.textContent = "🔖 צייכן וואו איך האלט"; }, 1800);
+};
+document.getElementById("jump").onchange = e => { const n = +e.target.value; if (n >= 1 && n <= doc.numPages) holders[n - 1].scrollIntoView(); };
+const rezoom = z => { localStorage.setItem("lernZoom", z); location.reload(); };
+document.getElementById("zm").onclick = () => rezoom(Math.min(2.5, scale + 0.25));
+document.getElementById("zo").onclick = () => rezoom(Math.max(0.5, scale - 0.25));
+</script></body></html>

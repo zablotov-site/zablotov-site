@@ -1,0 +1,6 @@
+<!doctype html><html><head><meta charset="utf-8"><title>…</title></head><body><script>
+var l=new URLSearchParams(location.search).get("l")==="en"?"en":"yi";
+document.cookie="lang="+l+";path=/;max-age=31536000";
+var r=document.referrer;
+location.replace(r&&r.indexOf(location.origin)===0?r:"/chat");
+</script></body></html>
