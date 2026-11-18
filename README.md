@@ -2,7 +2,8 @@
 
 Live at https://zablotov.pages.dev - static site on Cloudflare Pages plus Pages Functions:
 
-- `functions/api/chat.js` - chat backend (D1 `zbchat` for state, KV `FILES` for uploads)
+- `functions/api/content.js` - public JSON of admin-managed content (KV `FILES`, key `site:content`); `site.js` renders it into the home, meldungen, shiurim, info and zmanim pages (static HTML is the fallback)
+- `/admin` + `functions/api/admin/*` - password-gated admin (meldungen, shiurim, info, home text, zmanim note, uploads, password change). Credentials are a salted PBKDF2 hash in KV (`admin:cred`) and sessions are HMAC-signed httpOnly cookies (secret in KV `admin:secret`); nothing secret is in the repo. Write endpoints require the cookie plus an `x-zb-admin` header.
 - `functions/f/u/[name].js` - serves chat uploads from KV
 - `functions/f/s/[name].js` - proxies the 80MB sefer `mwl6e4ovcdez5hu6bg.pdf` from GitHub Releases (over the Pages 25MB asset limit); all other `/f/s/*` files fall through to static assets
 
