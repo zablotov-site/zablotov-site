@@ -6,3 +6,8 @@ pages_build_output_dir = "."
 [[kv_namespaces]]
 binding = "FILES"
 id = "65ff50594fc04e169f657f0410414203"
+
+[[d1_databases]]
+binding = "SOCIAL"
+database_name = "zbchat"
+database_id = "0a869527-a9b2-46ca-b82f-90c74754b757"

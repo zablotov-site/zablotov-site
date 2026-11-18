@@ -15,3 +15,11 @@ Bookmarks: the lernen viewer saves "צייכן וואו איך האלט" per sef
 - `sw.js` + `push.js` - service worker (offline shell cache, push display) and the More-page subscribe button.
 - `/chaverim` - member list from `api/chat?chaverim=1` (people records in D1, `since` = first seen).
 - `404.html` - Pages not-found page (also stops missing paths returning the homepage with 200).
+
+## Shiurim feed and reactions
+
+`/shiurim` uses `shorts.js` and `shorts.css`: full-length video/audio cards with vertical scroll snap, filters, native media controls, sharing, downloads, likes with display-name lists, and comments. Scrolling away pauses playback; playback starts only on the visitor's gesture. Landscape video is contained rather than cropped. Deep links use each stable shiur ID in the fragment.
+
+Pages Functions `/api/social` persist reactions in the existing D1 database `zbchat`, binding `SOCIAL`. The prefixed `social_*` tables are created by `migrations/0001_social.sql`; no existing tables are dropped or changed. A signed httpOnly/Secure/SameSite device cookie links the name-once profile. Its application signing key is KV `social:secret`, separate from admin sessions so changing the admin password does not sign viewers out. Names are self-entered, public and not verified identities. They do not confer admin access. A new browser or deleting cookies can create a new identity, so bans are per device, not a guarantee against a determined person. Likes are unique per shiur/device and idempotent. Lists and comments paginate; profile names and comment bodies render as plain text. The site does not invent social counts.
+
+Writes require a custom same-origin header and validated profile/content; names max 40 characters, comments max 1000. D1 atomic counters apply IP, profile-creation and device/comment rate limits. Admin moderation is under the existing authenticated admin's new reactions tab; delete individual comments, ban devices (hiding their comments and likes), or unban them. API responses are no-store. Worker/D1 free quotas still apply and errors do not trigger a paid upgrade. Back up D1 before future schema changes. Existing KV content, credentials, uploaded media and `/f/u/` URLs are unchanged. R2 is not needed for this feed.

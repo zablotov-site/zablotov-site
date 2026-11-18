@@ -1,6 +1,6 @@
 (()=>{
 const $=(s)=>document.querySelector(s);
-let C=null,tab="meldungen",dirty=false;
+let C=null,tab="meldungen",dirty=false,socialBefore=null;
 const H={"x-zb-admin":"1"};
 async function api(path,opt={}){const r=await fetch(path,{...opt,headers:{...H,...(opt.headers||{})},credentials:"same-origin"});let j={};try{j=await r.json()}catch{}if(!r.ok)throw Object.assign(new Error(j.error||"err"),{status:r.status,j});return j}
 function el(t,a={},...k){const e=document.createElement(t);for(const[n,v]of Object.entries(a)){if(n==="class")e.className=v;else if(n.startsWith("on"))e.addEventListener(n.slice(2),v);else if(v!==false&&v!=null)e.setAttribute(n,v)}k.flat().forEach(x=>e.append(x));return e}
@@ -14,11 +14,11 @@ function itemBar(arr,i){return el("div",{class:"adm-row"},
  el("button",{class:"btn btn-sm btn-ghost",type:"button",onclick:()=>move(arr,i,-1)},"↑"),
  el("button",{class:"btn btn-sm btn-ghost",type:"button",onclick:()=>move(arr,i,1)},"↓"),
  el("button",{class:"btn btn-sm btn-danger",type:"button",onclick:()=>{if(confirm("אויסמעקן?")){arr.splice(i,1);dirty=true;render()}}},"אויסמעקן"))}
-const TABS=[["meldungen","מעלדונגען"],["shiurim","שיעורים"],["info","אינפא"],["home","היים און זמנים"],["pw","פאסווארד"]];
+const TABS=[["meldungen","מעלדונגען"],["shiurim","שיעורים"],["info","אינפא"],["home","היים און זמנים"],["social","לייקס און קאמענטארן"],["pw","פאסווארד"]];
 function render(){
- const t=$("#tabs");t.replaceChildren(...TABS.map(([k,n])=>el("button",{type:"button","aria-pressed":String(k===tab),onclick:()=>{tab=k;render()}},n)));
+ const t=$("#tabs");t.replaceChildren(...TABS.map(([k,n])=>el("button",{type:"button","aria-pressed":String(k===tab),onclick:()=>{tab=k;socialBefore=null;render()}},n)));
  const v=$("#view");v.replaceChildren();
- $("#save").hidden=tab==="pw";
+ $("#save").hidden=tab==="pw"||tab==="social";
  if(tab==="meldungen"){
   v.append(el("button",{class:"btn",type:"button",onclick:()=>{C.meldungen.unshift({id:uid(),title:"",body:"",date:heb()});dirty=true;render()}},"+ נייע מעלדונג"));
   C.meldungen.forEach((m,i)=>v.append(el("div",{class:"adm-item"},field("קעפל",m,"title"),field("טעקסט",m,"body",{area:1}),dateField(m),itemBar(C.meldungen,i))));
@@ -37,6 +37,23 @@ function render(){
  }
  if(tab==="info"){const i=C.info;v.append(el("div",{class:"adm-item"},field("וועגן דער חבורה",i,"about",{area:1}),field("סדר הלימוד און זמנים",i,"seder",{area:1}),field("פלאץ",i,"place",{area:1}),field("מאפעס לינק",i,"placeUrl",{ph:"https://maps.app.goo.gl/…"}),field("קאנטאקט",i,"contact",{area:1})))}
  if(tab==="home"){v.append(el("div",{class:"adm-item"},el("h3",{class:"h"},"היים בלאט"),field("מען לערנט יעצט",C.home,"learning",{area:1,ph:"וואס די חבורה לערנט"}),el("p",{class:"small muted"},"די קארטל \"לעצטע מעלדונגען\" ווייזט אויטאמאטיש די נייסטע מעלדונג.")),el("div",{class:"adm-item"},el("h3",{class:"h"},"זמנים בלאט"),field("הערה אונטער די זמנים",C,"zmanimNote",{area:1,ph:"למשל: זמן פון דער חבורה"}),el("p",{class:"small muted"},"די זמנים אליין קומען אויטאמאטיש פון hebcal.")))}
+ if(tab==="social"){
+  const box=el("div",{class:"adm-item"},el("h3",{},"קאמענטארן און אפגעשפארטע אפאראטן"));v.append(box);
+  box.append(el("p",{class:"small"},"אפשפארן באהאלט אלע לייקס און קאמענטארן פון דעם אפאראט. נעמען זענען נישט וועריפיצירט. א נייע בראוזער קען שאפן א נייע אידענטיטעט."));
+  api("/api/admin/social"+(socialBefore?"?before="+socialBefore:"")).then(data=>{
+   if(tab!=="social")return;
+   const titles=Object.fromEntries(C.shiurim.map(s=>[s.id,s.title]));
+   if(!data.comments.length)box.append(el("p",{},"נאך נישטא קיין קאמענטארן."));
+   data.comments.forEach(c=>{
+    const del=el("button",{class:"btn btn-sm btn-danger",type:"button",onclick:async()=>{if(!confirm("אויסמעקן דעם קאמענטאר?"))return;try{await api("/api/admin/social",{method:"POST",body:JSON.stringify({action:"delete",id:c.id})});render()}catch{status("נישט געלונגען",1)}}},"אויסמעקן");
+    const ban=el("button",{class:"btn btn-sm btn-ghost",type:"button",onclick:async()=>{if(!confirm("אפשפארן דעם אפאראט?"))return;try{await api("/api/admin/social",{method:"POST",body:JSON.stringify({action:"ban",device:c.device,banned:true})});render()}catch{status("נישט געלונגען",1)}}},c.banned?"אפגעשפארט":"שפאר אפ דעם אפאראט");
+    const body=el("p",{});body.textContent=c.body;body.style.whiteSpace="pre-wrap";body.style.overflowWrap="anywhere";
+    box.append(el("div",{class:"adm-item"},el("b",{},c.name),el("p",{class:"small"},titles[c.shiur]||c.shiur),body,el("div",{class:"adm-row"},del,ban)));
+   });
+   if(data.next)box.append(el("button",{class:"btn btn-sm btn-ghost",type:"button",onclick:()=>{socialBefore=data.next;render()}},"עלטערע קאמענטארן"));if(socialBefore)box.append(el("button",{class:"btn btn-sm btn-ghost",type:"button",onclick:()=>{socialBefore=null;render()}},"די נייסטע קאמענטארן"));
+   if(data.banned.length){box.append(el("h3",{},"אפגעשפארטע אפאראטן"));data.banned.forEach(p=>box.append(el("div",{class:"adm-row"},el("span",{},p.name),el("button",{class:"btn btn-sm btn-ghost",type:"button",onclick:async()=>{try{await api("/api/admin/social",{method:"POST",body:JSON.stringify({action:"ban",device:p.id,banned:false})});render()}catch{status("נישט געלונגען",1)}}},"מאך ווידער אויף"))))}
+  }).catch(()=>{box.append(el("p",{},"נישט געלונגען צו לאדן. פרוביר נאכאמאל."))});
+ }
  if(tab==="pw"){const o={user:"",current:"",password:""};
   v.append(el("div",{class:"adm-item"},field("יוזערניים (לאז ליידיג = דער זעלבער)",o,"user"),field("יעצטיגער פאסווארד",o,"current",{type:"password"}),field("נייער פאסווארד (מינ׳ 6)",o,"password",{type:"password"}),
    el("button",{class:"btn",type:"button",onclick:async()=>{try{await api("/api/admin/password",{method:"POST",body:JSON.stringify(o)});status("פאסווארד געביטן");o.current=o.password="";render()}catch(e){status(e.message==="badcurrent"?"יעצטיגער פאסווארד איז פאלש":"נייער פאסווארד צו קורץ",1)}}},"בייט פאסווארד")))}
