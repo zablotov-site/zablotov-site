@@ -15,6 +15,7 @@ export async function onRequestGet(ctx) {
     if (v) out.set(h, v);
   }
   if (!out.has("content-type")) out.set("content-type", "application/pdf");
+  if (new URL(ctx.request.url).searchParams.get("dl")) out.set("content-disposition", "attachment");
   out.set("cache-control", "public, max-age=86400");
   out.set("access-control-allow-origin", "*");
   return new Response(res.body, { status: res.status, headers: out });

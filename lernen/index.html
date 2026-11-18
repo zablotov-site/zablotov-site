@@ -7,25 +7,58 @@
 #pg{display:flex;flex-direction:column;align-items:center;gap:10px;padding:10px 0 40px}
 canvas{max-width:100%;background:#fff;box-shadow:0 2px 8px #0008}
 .ld{color:#f2dc9a;padding:30px;text-align:center}
+.ld a{color:#ffe9a8}
 #jump{width:70px;font-size:14px;padding:4px;border-radius:6px;border:0}</style></head><body>
-<div class="bar"><a href="/sefarim">← Sforim</a><b>ספר דרך ה׳ – עם פירוש באידיש</b><input id="jump" type="number" min="1" placeholder="Page"><button id="zm">+</button><button id="zo">−</button><button id="bm">🔖 צייכן וואו איך האלט</button><a href="/f/s/mwd6ktk9c7r9eawy78.pdf" download>⬇</a></div>
+<div class="bar"><a href="/sefarim">← Sforim</a><b>ספר דרך ה׳ – עם פירוש באידיש</b><input id="jump" type="number" min="1" placeholder="Page"><button id="zm">+</button><button id="zo">−</button><button id="bm">🔖 צייכן וואו איך האלט</button><a id="dl" href="/f/s/mwd6ktk9c7r9eawy78.pdf" download>⬇</a></div>
 <div id="pg"><div class="ld">Loading… (a big sefer can take a few seconds)</div></div>
+<script>
+// Fallback: if the module below never runs or fails (old browser, blocked file), offer a direct link.
+window.__lernOk = false;
+setTimeout(function () {
+  if (window.__lernOk) return;
+  var qs = new URLSearchParams(location.search);
+  var F = qs.get("f") || "s/mwd6ktk9c7r9eawy78.pdf";
+  var ld = document.querySelector(".ld");
+  if (ld) ld.innerHTML = 'דער לייענער האט זיך נישט געעפנט.<br><a href="/f/' + F + '">עפענען דעם ספר דירעקט ↗</a>';
+}, 15000);
+</script>
 <script type="module">
-import * as pdfjsLib from "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.4.168/build/pdf.min.mjs";
-pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.4.168/build/pdf.worker.min.mjs";
-const qs=new URLSearchParams(location.search);const F=qs.get("f")||"s/mwd6ktk9c7r9eawy78.pdf";const T=qs.get("t")||"ספר";document.title=T+" · Chevras Zablotov";document.querySelector(".bar b").textContent=T;document.querySelector(".bar a[download]").href="/f/"+F;const key = "lern:" + F; const bmKey = "zbbm:" + F;
+let pdfjsLib;
+try {
+  pdfjsLib = await import("/vendor/pdf.min.mjs");
+  pdfjsLib.GlobalWorkerOptions.workerSrc = "/vendor/pdf.worker.min.mjs";
+} catch (e) {
+  pdfjsLib = null;
+}
+const qs=new URLSearchParams(location.search);const F=qs.get("f")||"s/mwd6ktk9c7r9eawy78.pdf";const T=qs.get("t")||"ספר";document.title=T+" · Chevras Zablotov";document.querySelector(".bar b").textContent=T;document.querySelector(".bar a[download]").href="/f/"+F+"?dl=1";const key = "lern:" + F; const bmKey = "zbbm:" + F;
 let scale = parseFloat(localStorage.getItem("lernZoom") || "1");
 const box = document.getElementById("pg");
-const doc = await pdfjsLib.getDocument({ url: "/f/"+F, disableAutoFetch: true, disableStream: false }).promise;
+function fail(msg) {
+  box.innerHTML = '<div class="ld">' + msg + '<br><a href="/f/' + F + '">עפענען דעם ספר דירעקט ↗</a></div>';
+}
+if (!pdfjsLib) {
+  fail("דער לייענער האט זיך נישט געלאדנט.");
+} else {
+let doc;
+try {
+  doc = await pdfjsLib.getDocument({ url: "/f/"+F, disableAutoFetch: true, disableStream: false }).promise;
+  window.__lernOk = true;
+} catch (e) {
+  fail("דער ספר האט זיך נישט געלאדנט — פּרובירט נאכאַמאָל.");
+}
+if (doc) {
 box.innerHTML = "";
 const holders = [];
 for (let i = 1; i <= doc.numPages; i++) { const d = document.createElement("div"); d.dataset.p = i; d.style.minHeight = "60vh"; d.style.width = "100%"; d.style.display = "flex"; d.style.justifyContent = "center"; box.appendChild(d); holders.push(d); }
 const done = new Set();
 async function render(d) { const i = +d.dataset.p; if (done.has(i)) return; done.add(i);
+  try {
   const page = await doc.getPage(i); const w = Math.min(window.innerWidth - 8, 900) * scale;
   const vp0 = page.getViewport({ scale: 1 }); const vp = page.getViewport({ scale: (w / vp0.width) * (window.devicePixelRatio || 1) });
   const c = document.createElement("canvas"); c.width = vp.width; c.height = vp.height; c.style.width = w + "px";
-  await page.render({ canvasContext: c.getContext("2d"), viewport: vp }).promise; d.style.minHeight = ""; d.innerHTML = ""; d.appendChild(c); }
+  await page.render({ canvasContext: c.getContext("2d"), viewport: vp }).promise; d.style.minHeight = ""; d.innerHTML = ""; d.appendChild(c);
+  } catch (e) { done.delete(i); }
+}
 const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { render(e.target); localStorage.setItem(key, e.target.dataset.p); } }), { rootMargin: "800px" });
 holders.forEach(h => io.observe(h));
 const wantP = +qs.get("p") || 0;
@@ -55,4 +88,5 @@ document.getElementById("jump").onchange = e => { const n = +e.target.value; if 
 const rezoom = z => { localStorage.setItem("lernZoom", z); location.reload(); };
 document.getElementById("zm").onclick = () => rezoom(Math.min(2.5, scale + 0.25));
 document.getElementById("zo").onclick = () => rezoom(Math.max(0.5, scale - 0.25));
+} }
 </script></body></html>

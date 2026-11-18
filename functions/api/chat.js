@@ -1,3 +1,5 @@
+import { pushSendAll, pushSetLast } from "./_push.js";
+
 const J = (o, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { "content-type": "application/json" } });
 
 let FILES, DB;
@@ -17,6 +19,7 @@ const ONLINE_MS = 30000, TYPING_MS = 5000;
 function touch(db, me, name) {
   if (!me) return;
   const p = db.people[me] || (db.people[me] = {});
+  if (!p.since) p.since = Date.now();
   if (name) p.name = name;
   p.at = Date.now();
 }
@@ -116,6 +119,13 @@ export async function onRequest(ctx) {
       return J(out);
     }
 
+    if (q.get("chaverim")) {
+      const people = Object.keys(db.people)
+        .map((w) => ({ who: w, name: (db.people[w] || {}).name || "?", av: (db.people[w] || {}).av || undefined, online: !!isOnline(db.people[w]), at: (db.people[w] || {}).at || undefined, since: (db.people[w] || {}).since || (db.people[w] || {}).at || undefined }))
+        .sort((a, b) => (b.at || 0) - (a.at || 0));
+      return J({ people });
+    }
+
     if (q.get("info")) {
       const id = +q.get("info");
       for (const cid in db.convs) {
@@ -167,6 +177,8 @@ export async function onRequest(ctx) {
       if (b.loc && typeof b.loc.lat === "number") m.loc = { lat: b.loc.lat, lng: b.loc.lng, acc: b.loc.acc || 0, live: !!b.loc.mins, until: b.loc.mins ? now + b.loc.mins * 60000 : 0, at: now };
       c.msgs.push(m);
       const reads = db.reads[cid] || (db.reads[cid] = {}); reads[me] = m.id;
+      const payload = { title: "חבורת זאבלטוב", body: (m.name || "?") + ": " + (m.body || (m.poll ? "📊 פאל" : m.file_type ? "📎" : m.loc ? "📍 לאקעשען" : "")).slice(0, 120), url: "/chat" };
+      ctx.waitUntil((async () => { await pushSetLast(DB, payload).catch(() => {}); await pushSendAll(DB, payload, me).catch(() => {}); })());
     } else if (c) {
       const m = c.msgs.find((x) => x.id === +b.id);
       if (!m) return J({ error: "nf" }, 404);
