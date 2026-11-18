@@ -1,10 +1,6 @@
-const C="zb-v12";const SHELL=["/","/sefarim","/chat","/meldungen","/zmanim","/more","/chaverim","/shiurim","/quiz","/info","/styles.css?v=11","/home.css?v=11","/logo-sm.webp","/icon-192.png"];
+const C="zb-v13";const SHELL=["/","/sefarim","/meldungen","/zmanim","/more","/shiurim","/quiz","/info","/styles.css?v=11","/home.css?v=12","/logo-sm.webp","/icon-192.png"];
 self.addEventListener("install",e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(SHELL)).catch(()=>{}));self.skipWaiting()});
 self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==C).map(k=>caches.delete(k)))));self.clients.claim()});
 self.addEventListener("fetch",e=>{const r=e.request,u=new URL(r.url);if(r.method!=="GET"||u.origin!==location.origin||u.pathname.startsWith("/api/"))return;
 if(u.pathname.startsWith("/f/")){e.respondWith(caches.open(C).then(async c=>{const h=await c.match(r);if(h)return h;const n=await fetch(r);if(n.ok&&n.status===200&&!r.headers.get("range")&&/image/.test(n.headers.get("content-type")||""))c.put(r,n.clone());return n}));return}
 e.respondWith(fetch(r).then(n=>{if(n.ok){const cp=n.clone();caches.open(C).then(c=>c.put(r,cp))}return n}).catch(()=>caches.match(r).then(h=>h||caches.match("/"))))});
-self.addEventListener("push",e=>{e.waitUntil((async()=>{let d={title:"חבורת זאבלטוב",body:"",url:"/"};try{d=await (await fetch("/api/push?x="+Date.now(),{cache:"no-store"})).json()}catch(x){}
-const cl=await self.clients.matchAll({type:"window",includeUncontrolled:true});if(d.url==="/chat"&&cl.some(c=>c.visibilityState==="visible"&&new URL(c.url).pathname==="/chat"))return;
-return self.registration.showNotification(d.title||"חבורת זאבלטוב",{body:d.body||"",icon:"/icon-192.png",badge:"/icon-192.png",tag:"zb-"+(d.url||"/"),renotify:true,data:{url:d.url||"/"},dir:"rtl",lang:"yi"})})())});
-self.addEventListener("notificationclick",e=>{e.notification.close();const u=(e.notification.data&&e.notification.data.url)||"/";e.waitUntil((async()=>{const cl=await self.clients.matchAll({type:"window",includeUncontrolled:true});for(const c of cl){if("focus" in c){try{await c.navigate(u)}catch(x){}return c.focus()}}return self.clients.openWindow(u)})())});

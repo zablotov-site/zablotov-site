@@ -2,5 +2,5 @@
 var l=new URLSearchParams(location.search).get("l")==="en"?"en":"yi";
 document.cookie="lang="+l+";path=/;max-age=31536000";
 var r=document.referrer;
-location.replace(r&&r.indexOf(location.origin)===0?r:"/chat");
+location.replace(r&&r.indexOf(location.origin)===0?r:"/");
 </script></body></html>
