@@ -1,4 +1,4 @@
-const C="zb-v14";const SHELL=["/","/sefarim","/meldungen","/zmanim","/more","/shiurim","/quiz","/info","/site.js?v=1","/styles.css?v=11","/home.css?v=12","/logo-sm.webp","/icon-192.png"];
+const C="zb-v15";const SHELL=["/","/sefarim","/meldungen","/zmanim","/more","/shiurim","/quiz","/info","/site.js?v=2","/styles.css?v=11","/home.css?v=13","/logo-sm.webp","/icon-192.png"];
 self.addEventListener("install",e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(SHELL)).catch(()=>{}));self.skipWaiting()});
 self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==C).map(k=>caches.delete(k)))));self.clients.claim()});
 self.addEventListener("fetch",e=>{const r=e.request,u=new URL(r.url);if(r.method!=="GET"||u.origin!==location.origin||u.pathname.startsWith("/api/"))return;

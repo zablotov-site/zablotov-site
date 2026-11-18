@@ -7,9 +7,17 @@ function prose(t){const d=el("div","prose");String(t).split(/\n+/).filter(Boolea
 function empty(t){const d=el("div","empty");const s=el("span","empty-dot");s.setAttribute("aria-hidden","true");d.append(s,el("p",null,t));return d}
 const dl='<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.65" viewBox="0 0 24 24" style="width:18px;height:18px"><path d="M12 4v11m0 0 4-4m-4 4-4-4M5 20h14"/></svg>';
 fetch("/api/content",{cache:"no-store"}).then(r=>r.json()).then(c=>{
- if(p==="/"){const u=document.querySelectorAll(".updates .update p");
-  if(c.home&&c.home.learning&&u[0])u[0].textContent=c.home.learning;
-  if(u[1]){const m=c.meldungen[0];if(m)u[1].textContent=m.title||m.body.slice(0,90)}}
+ if(p==="/"){
+  const learning=document.querySelector(".updates .update p");if(c.home&&c.home.learning&&learning)learning.textContent=c.home.learning;
+  const host=$("#home-announcements"),list=$("#home-announcement-list");
+  if(host&&list){list.replaceChildren();
+   if(!c.meldungen.length)list.append(el("p","home-ann-empty","נאך נישטא קיין מעלדונגען. בקרוב אי״ה."));
+   c.meldungen.forEach(x=>{const a=el("article","home-ann-item");a.id="home-ann-"+x.id;
+    const top=el("div","home-ann-top");if(x.title)top.append(el("h3",null,x.title));if(x.date)top.append(el("span","home-ann-date",x.date));a.append(top);
+    if(x.body)a.append(el("p","home-ann-body",x.body));list.append(a)});
+   const b=document.querySelector('.extras a[href="/meldungen"]');if(b&&c.meldungen.length){const badge=el("span","ann-count",String(c.meldungen.length));b.append(badge);b.setAttribute("aria-label","מעלדונגען ("+c.meldungen.length+")")}
+  }
+ }
  if(p==="/meldungen"){const m=$("main");const old=m.querySelector(".empty, .mlist");if(!old)return;
   const box=el("div","mlist");
   if(!c.meldungen.length)box.appendChild(empty("נאך נישטא קיין מעלדונגען. בקרוב אי״ה."));
