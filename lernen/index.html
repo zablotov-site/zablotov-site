@@ -1,14 +1,17 @@
 <!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ספר דרך ה׳ – עם פירוש באידיש · Chevras Zablotov</title>
-<style>body{margin:0;background:#3b3020;font-family:system-ui,sans-serif}
-.bar{position:sticky;top:0;z-index:3;display:flex;gap:6px;align-items:center;background:#6b4f12;color:#fff3cf;padding:8px 10px}
+<style>@font-face{font-family:'Frank Ruhl Libre';font-weight:400;font-display:swap;src:url(/fonts/frl-hebrew-400.woff2) format('woff2');unicode-range:U+0307-0308,U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F}
+@font-face{font-family:'Frank Ruhl Libre';font-weight:700;font-display:swap;src:url(/fonts/frl-hebrew-700.woff2) format('woff2');unicode-range:U+0307-0308,U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F}
+@font-face{font-family:'Frank Ruhl Libre';font-weight:400;font-display:swap;src:url(/fonts/frl-latin-400.woff2) format('woff2')}
+body{margin:0;background:#241a12;font-family:'Frank Ruhl Libre',Georgia,serif}
+.bar{position:sticky;top:0;z-index:3;display:flex;gap:6px;align-items:center;background:#43101d;color:#f3ead3;padding:8px 10px;border-bottom:2px solid #b08a3e}
 .bar b{flex:1;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.bar a,.bar button{color:#fff3cf;background:#0000;border:1px solid #e9cf86;border-radius:8px;padding:5px 9px;font-size:14px;text-decoration:none}
+.bar a,.bar button{color:#f3ead3;background:#0000;border:1px solid #b08a3e;border-radius:4px;padding:5px 9px;font-size:14px;text-decoration:none;font-family:inherit}
 #pg{display:flex;flex-direction:column;align-items:center;gap:10px;padding:10px 0 40px}
 canvas{max-width:100%;background:#fff;box-shadow:0 2px 8px #0008}
-.ld{color:#f2dc9a;padding:30px;text-align:center}
-.ld a{color:#ffe9a8}
-#jump{width:70px;font-size:14px;padding:4px;border-radius:6px;border:0}</style></head><body>
+.ld{color:#e9dcc0;padding:30px;text-align:center}
+.ld a{color:#d9b45a}
+#jump{width:70px;font-size:14px;padding:4px;border-radius:4px;border:0;font-family:inherit}</style></head><body>
 <div class="bar"><a href="/sefarim">← Sforim</a><b>ספר דרך ה׳ – עם פירוש באידיש</b><input id="jump" type="number" min="1" placeholder="Page"><button id="zm">+</button><button id="zo">−</button><button id="bm">🔖 צייכן וואו איך האלט</button><a id="dl" href="/f/s/mwd6ktk9c7r9eawy78.pdf" download>⬇</a></div>
 <div id="pg"><div class="ld">Loading… (a big sefer can take a few seconds)</div></div>
 <script>

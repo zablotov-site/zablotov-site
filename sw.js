@@ -1,4 +1,4 @@
-const C="zb-v3";const SHELL=["/","/sefarim","/chat","/meldungen","/zmanim","/more","/chaverim","/shiurim","/quiz","/info","/styles.css?v=7","/logo-sm.webp","/icon-192.png"];
+const C="zb-v4";const SHELL=["/","/sefarim","/chat","/meldungen","/zmanim","/more","/chaverim","/shiurim","/quiz","/info","/styles.css?v=8","/logo-sm.webp","/icon-192.png"];
 self.addEventListener("install",e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(SHELL)).catch(()=>{}));self.skipWaiting()});
 self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==C).map(k=>caches.delete(k)))));self.clients.claim()});
 self.addEventListener("fetch",e=>{const r=e.request,u=new URL(r.url);if(r.method!=="GET"||u.origin!==location.origin||u.pathname.startsWith("/api/"))return;

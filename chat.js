@@ -8,7 +8,7 @@ const nm=()=>S.getItem("chatName")||"";
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const EM=["👍","❤️","😂","😮","😢","🙏","🔥","👏"];
 const EMS=[..."😀😁😂🤣😊😇🙂😉😍🥰😘😋😜🤔🤗😎🥳😮😢😭😡👍👎👏🙌🙏💪👌✌️🤝❤️💙💚💛🧡💜🔥⭐✨🎉🎊🎂🍷🕯️📖✡️🌹🌸☀️🌙⏰✅❌❓‼️💯👀😴🤩😬🙈"].filter(c=>c.trim()&&c!=="\ufe0f");
-const COLORS=["#3fb2ae","#a3177a","#4c1769","#e07a2f","#2f7de0","#23807d","#c0392b","#8e44ad"];
+const COLORS=["#8a6a24","#9c6f1e","#5e1f2e","#7a4a2b","#3c5a2a","#6b5636","#8c2b1d","#4a3b66"];
 const col=s=>COLORS[[...String(s||"")].reduce((a,c)=>a+c.charCodeAt(0),0)%COLORS.length];
 const avh=(name,av,who,cls="",on=false)=>'<span class="av '+cls+(on?" on":"")+'" style="background-color:'+col(who||name)+(av?';background-image:url(/f/'+esc(av)+')':'')+'">'+(av?"":esc([...String(name||"?")][0]||"?"))+'</span>';
 const fmt=t=>new Date(t).toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"});
