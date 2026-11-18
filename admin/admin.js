@@ -44,9 +44,11 @@ function render(){
 async function save(){status("שפייכערט…");try{C=await api("/api/admin/content",{method:"PUT",body:JSON.stringify(C)});dirty=false;status("געשפייכערט ✓ - איז יעצט אויפן וועבזייטל");render()}catch(e){if(e.status===401){status("די סעשן איז אויס - לאג אריין נאכאמאל",1);show(false)}else status("נישט געלונגען צו שפייכערן",1)}}
 function show(ok){$("#login").hidden=ok;$("#panel").hidden=!ok}
 async function load(){C=await (await fetch("/api/content",{cache:"no-store"})).json();render()}
+$("#reveal").addEventListener("change",()=>{$("#lp").type=$("#reveal").checked?"text":"password"});
+$("#lp").addEventListener("keyup",e=>{$("#caps").hidden=!e.getModifierState("CapsLock")});
 $("#lf").addEventListener("submit",async e=>{e.preventDefault();$("#lerr").hidden=true;
  try{await api("/api/admin/login",{method:"POST",body:JSON.stringify({user:$("#lu").value,password:$("#lp").value})});$("#lp").value="";await load();show(true)}
- catch(x){const m=$("#lerr");m.textContent=x.status===429?"צו פיל פראבירט - וואַרט 15 מינוט":"פאלשער יוזערניים אדער פאסווארד";m.hidden=false}});
+ catch(x){const m=$("#lerr");m.textContent=x.status===429?"צו פיל פראבירט - וואַרט 15 מינוט":x.status===401?"פאלשער יוזערניים אדער פאסווארד - קוק מיט ווייז פאסווארד":"פארבינדונג נישט געלונגען - פרוביר נאכאמאל";m.hidden=false}});
 $("#save").addEventListener("click",save);
 $("#out").addEventListener("click",async()=>{await api("/api/admin/logout",{method:"POST"});show(false)});
 window.addEventListener("beforeunload",e=>{if(dirty){e.preventDefault();e.returnValue=""}});
