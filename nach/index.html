@@ -29,7 +29,12 @@
 <nav class="chips" id="nach-chips" aria-label="Sections"><a href="#" data-s="-1" aria-current="true">אלע</a><a href="#" data-s="0">נביאים ראשונים</a><a href="#" data-s="1">נביאים אחרונים</a><a href="#" data-s="2">כתובים</a></nav>
 <div id="nach-list"></div></main>
 <style>
-.nach-cont{width:100%;margin:0 0 14px;background:linear-gradient(112deg,#a9436c,#3c7a78 50%,#754aaa);border:0}
+.nach-cont{display:block;width:100%;box-sizing:border-box;margin:0 0 14px;padding:13px 16px;text-align:center;font-weight:700;background:linear-gradient(112deg,#a9436c,#3c7a78 50%,#754aaa);border:0}
+.nach-cont[hidden]{display:none}
+#nach-chips{margin:14px 0 4px}
+#nach-chips a{padding:5px 8px;font-size:13px;white-space:nowrap}
+.nach-card{transition:border-color .15s ease}
+.nach-card:active{border-color:#cba1da88}
 .nach-sec{margin:20px 0 8px;font-size:19px;font-weight:800;color:#d9c2ef}
 .nach-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
 .nach-card{display:flex;flex-direction:column;gap:4px;padding:14px;min-height:70px;border-radius:16px;border:1px solid #cba1da3b;background:linear-gradient(145deg,#c18ed61f,#ffffff05);text-decoration:none;color:#f0e6fa}
