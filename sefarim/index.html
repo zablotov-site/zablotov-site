@@ -25,8 +25,17 @@
 <header aria-label="חבורת זאבלטוב" class="aurora-head"><div><b>חבורת זאבלטוב</b><span>תורה וגדולה במקום אחד</span></div><a aria-label="מער" class="menu" href="/more"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.65" viewbox="0 0 24 24"><circle cx="5" cy="12" r="1"></circle><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle></svg></a></header>
 <div class="wrap lang-row"><button aria-label="פול סקרין" class="lang-t fs-t" id="fsb" type="button">⛶ פול סקרין</button></div><script defer="" src="/fs.js?v=2"></script><main class="wrap" id="main"><h1 class="page-h"><svg aria-hidden="true" class="ico" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H11v15H5.5C4.7 19 4 18.3 4 17.5z"></path><path d="M20 5.5c0-.8-.7-1.5-1.5-1.5H13v15h5.5c.8 0 1.5-.7 1.5-1.5z"></path></svg>ספרים</h1>
 <p class="lead">די ספרים וואס די חבורה לערנט - צו עפענען אדער דאונלאודן.</p>
-<nav aria-label="Categories" class="chips"><a aria-current="true" href="/sefarim">אלע</a><a href="/sefarim?cat=%D7%9E%D7%97%D7%A9%D7%91%D7%94">מחשבה</a><a href="/sefarim?cat=%D7%97%D7%95%D7%9E%D7%A9">חומש</a><a href="/sefarim?cat=%D7%9E%D7%95%D7%A1%D7%A8">מוסר</a><a href="/sefarim?cat=%D7%92%D7%9E%D7%A8%D7%90">גמרא</a></nav>
+<nav aria-label="Categories" class="chips"><a aria-current="true" href="/sefarim">אלע</a><a href="/sefarim?cat=%D7%9E%D7%97%D7%A9%D7%91%D7%94">מחשבה</a><a href="/sefarim?cat=%D7%97%D7%95%D7%9E%D7%A9">חומש</a><a href="/sefarim?cat=%D7%9E%D7%95%D7%A1%D7%A8">מוסר</a><a href="/sefarim?cat=%D7%92%D7%9E%D7%A8%D7%90">גמרא</a><a href="/sefarim?cat=%D7%AA%D7%A0%22%D7%9A">תנ״ך</a></nav>
 <div class="sefarim"><article class="sefer">
+<div aria-hidden="true" class="sefer-cover sefer-ph"><span>נ״ך מיט ייִדיש טייטש</span></div>
+<div class="sefer-body">
+<h3 class="sefer-title">נ״ך מיט ייִדיש טייטש</h3>
+<p class="sefer-author">יהואש־איבערזעצונג</p>
+<p class="sefer-meta"><span class="chip">תנ״ך</span><span class="meta-x">34 ספרים · 17,360 פסוקים</span></p>
+<div class="sefer-note"><p>נביאים און כתובים, פסוק פאר פסוק: העברעיש מיט ניקוד און ייִדישער איבערזעצונג. מען קען צייכענען וואו מען האלט, ענדערן די גרייס פון די אותיות, און באהאלטן דעם ייִדיש.</p></div>
+<div class="sefer-actions"><a class="btn" href="/nach/">לערנען</a></div>
+</div>
+</article><article class="sefer">
 <div aria-hidden="true" class="sefer-cover sefer-ph"><span>ספר דרך ה׳ – עם פירוש באידיש</span></div>
 <div class="sefer-body">
 <h3 class="sefer-title">ספר דרך ה׳ – עם פירוש באידיש</h3>
@@ -106,7 +115,7 @@ document.getElementById("insX").onclick=()=>{ins.hidden=true;localStorage.setIte
 <script>
 (function(){var c=new URLSearchParams(location.search).get("cat");if(!c)return;
 var map={"\u05de\u05d7\u05e9\u05d1\u05d4":"Machshava","\u05d7\u05d5\u05de\u05e9":"Chumash","\u05de\u05d5\u05e1\u05e8":"Mussar","\u05d2\u05de\u05e8\u05d0":"Gemara"};
-var want=map[c];if(!want)return;var labels={Machshava:"מחשבה",Chumash:"חומש",Mussar:"מוסר",Gemara:"גמרא"};want=labels[want]||want;
+var want=map[c]||(c==="\u05ea\u05e0\"\u05da"?"\u05ea\u05e0\u05f4\u05da":null);if(!want)return;var labels={Machshava:"מחשבה",Chumash:"חומש",Mussar:"מוסר",Gemara:"גמרא"};want=labels[want]||want;
 document.querySelectorAll(".chips a").forEach(function(a){a.removeAttribute("aria-current");
  if(a.textContent.trim()===want)a.setAttribute("aria-current","true")});
 document.querySelectorAll("article.sefer").forEach(function(a){

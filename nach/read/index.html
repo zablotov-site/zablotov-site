@@ -1,0 +1,68 @@
+<!doctype html><html lang="yi" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>נ״ך מיט ייִדיש · Chevras Zablotov</title>
+<link rel="stylesheet" href="/styles.css?v=12"><style>@font-face{font-family:'Frank Ruhl Libre';font-weight:400;font-display:swap;src:url(/fonts/frl-hebrew-400.woff2) format('woff2');unicode-range:U+0307-0308,U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F}
+@font-face{font-family:'Frank Ruhl Libre';font-weight:700;font-display:swap;src:url(/fonts/frl-hebrew-700.woff2) format('woff2');unicode-range:U+0307-0308,U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F}
+@font-face{font-family:'Frank Ruhl Libre';font-weight:400;font-display:swap;src:url(/fonts/frl-latin-400.woff2) format('woff2')}
+body{margin:0;background:#e9eef7;font-family:'Heebo',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+.bar{position:sticky;top:0;z-index:3;display:flex;gap:6px;align-items:center;background:#1748b4;color:#e4f5f5;padding:8px 10px;border-bottom:2px solid #128b91}
+.bar b{flex:1;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar a,.bar button{color:#e4f5f5;background:#0000;border:1px solid #128b91;border-radius:4px;padding:5px 9px;font-size:14px;text-decoration:none;font-family:inherit}
+#pg{display:flex;flex-direction:column;align-items:center;gap:10px;padding:10px 0 40px}
+canvas{max-width:100%;background:#fff;box-shadow:0 2px 8px #0008}
+.ld{color:#edf4ff;padding:30px;text-align:center}
+.ld a{color:#b6a4eb}
+#jump{width:70px;font-size:14px;padding:4px;border-radius:4px;border:0;font-family:inherit}
+.bar{background:rgba(255,255,255,.96);color:#223a5e;border-bottom:1px solid #d9e3f2;box-shadow:0 2px 16px #243e6810;backdrop-filter:blur(18px);flex-wrap:wrap}
+.bar a,.bar button{color:#245edb;border-color:#dae5f5;border-radius:10px;background:#f3f7ff;min-height:34px;cursor:pointer}
+.bar b{min-width:100px}#jump{background:#edf2fa;color:#234678;border:1px solid #dae5f5;border-radius:8px}
+.ld{color:#536785}.ld a{color:#245edb}canvas{box-shadow:0 4px 24px #263c5b1c}
+@media(max-width:600px){.bar b{flex-basis:calc(100% - 100px)}#bm{flex:1}.bar{gap:5px}}
+body{display:block;background:#0c1020}.bar{background:#111527ef;color:#e3d6f2;border-color:#c2a2de35}.bar a,.bar button{background:#b59bdb0c;color:#d9c2ef;border-color:#c2a4db3d}#jump{background:#1d2238;color:#c8b4df;border-color:#bca6cf3b}.ld{color:#a69ab8}.ld a{color:#b9d4f0}
+.bar{padding:10px;background:linear-gradient(115deg,#39243ddb,#16283ce8);border-bottom:1px solid #d6afd75c;box-shadow:0 8px 25px #0003;backdrop-filter:blur(20px)}.bar b{color:#dbc6ef}.bar a,.bar button{border-radius:12px;border:1px solid #d0a9df45;background:linear-gradient(145deg,#c18ed619,#ffffff03);color:#e4caee;min-height:36px}.bar #bm{background:linear-gradient(112deg,#a9436c,#3c7a78 50%,#754aaa);color:white;border-color:#d6b4df66;box-shadow:inset 0 1px 0 #ffe6ff26}.bar #jump{background:#181a2d;color:#dfcbec;border:1px solid #bd9bce3d;border-radius:10px}#pg{padding-top:18px}canvas{border-radius:3px;box-shadow:0 6px 30px #0004}
+</style>
+<style>
+body{background:#0c1020;color:#eee4f7}
+.bar select{background:#181a2d;color:#dfcbec;border:1px solid #bd9bce3d;border-radius:10px;min-height:36px;padding:0 8px;font:inherit;max-width:42vw}
+.bar button.on{background:linear-gradient(112deg,#a9436c,#754aaa);color:#fff}
+#rd{max-width:760px;margin:0 auto;padding:12px 14px 60px}
+.pg2{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:10px 0}
+.pg2 button{min-height:44px;padding:8px 14px;border-radius:12px;border:1px solid #d0a9df45;background:linear-gradient(145deg,#c18ed619,#ffffff03);color:#e4caee;font:inherit;cursor:pointer}
+.pg2 button:disabled{opacity:.35}.pg2 span{color:#b9a9cc}
+.v{padding:12px 8px;border-bottom:1px solid #c2a2de22;border-radius:10px}.v.mk{background:#a9436c26;border-bottom-color:transparent}
+.he{margin:0 0 6px;line-height:1.9;color:#fff;font-family:'Frank Ruhl Libre','David Libre','Noto Serif Hebrew','Times New Roman',serif}
+.yi{margin:0;line-height:1.75;color:#c2b6dc}
+.n{display:inline-block;min-width:2.6ch;margin-inline-end:8px;padding:2px 6px;border:0;border-radius:8px;background:#b59bdb2e;color:#d9c8f7;font:inherit;font-size:.75em;font-weight:700;cursor:pointer}
+.msg{padding:30px;text-align:center;color:#a69ab8}
+.hint{color:#8f86b8;font-size:13px;margin:4px 0}
+</style></head><body>
+<div class="bar lern-bar"><a href="/nach/">← ספרים</a><b id="ttl">נ״ך</b><select id="ch" aria-label="קאפיטל"></select><button id="zm" aria-label="גרעסער">+</button><button id="zo" aria-label="קלענער">−</button><button id="yb" class="on" aria-label="ייִדיש">א</button></div>
+<div id="rd"><p class="hint">דריקט אויף א פסוק־נומער כדי צו צייכענען וואו איר האלט (🔖 צייכן וואו איך האלט).</p><div id="top"></div><div id="vs" class="msg">לאדט…</div></div>
+<script>
+(function(){
+var qs=new URLSearchParams(location.search),slug=qs.get("b"),ch=parseInt(qs.get("c")||"1",10),vq=qs.get("v");
+var books=[{"slug": "joshua", "he": "יהושע", "en": "Joshua", "section": 0, "chapters": 24, "verses": 658}, {"slug": "judges", "he": "שופטים", "en": "Judges", "section": 0, "chapters": 21, "verses": 618}, {"slug": "i_samuel", "he": "שמואל א", "en": "I Samuel", "section": 0, "chapters": 31, "verses": 811}, {"slug": "ii_samuel", "he": "שמואל ב", "en": "II Samuel", "section": 0, "chapters": 24, "verses": 695}, {"slug": "i_kings", "he": "מלכים א", "en": "I Kings", "section": 0, "chapters": 22, "verses": 817}, {"slug": "ii_kings", "he": "מלכים ב", "en": "II Kings", "section": 0, "chapters": 25, "verses": 719}, {"slug": "isaiah", "he": "ישעיהו", "en": "Isaiah", "section": 1, "chapters": 66, "verses": 1291}, {"slug": "jeremiah", "he": "ירמיהו", "en": "Jeremiah", "section": 1, "chapters": 52, "verses": 1364}, {"slug": "ezekiel", "he": "יחזקאל", "en": "Ezekiel", "section": 1, "chapters": 48, "verses": 1273}, {"slug": "hosea", "he": "הושע", "en": "Hosea", "section": 1, "chapters": 14, "verses": 197}, {"slug": "joel", "he": "יואל", "en": "Joel", "section": 1, "chapters": 4, "verses": 73}, {"slug": "amos", "he": "עמוס", "en": "Amos", "section": 1, "chapters": 9, "verses": 146}, {"slug": "obadiah", "he": "עובדיה", "en": "Obadiah", "section": 1, "chapters": 1, "verses": 21}, {"slug": "jonah", "he": "יונה", "en": "Jonah", "section": 1, "chapters": 4, "verses": 48}, {"slug": "micah", "he": "מיכה", "en": "Micah", "section": 1, "chapters": 7, "verses": 105}, {"slug": "nahum", "he": "נחום", "en": "Nahum", "section": 1, "chapters": 3, "verses": 47}, {"slug": "habakkuk", "he": "חבקוק", "en": "Habakkuk", "section": 1, "chapters": 3, "verses": 56}, {"slug": "zephaniah", "he": "צפניה", "en": "Zephaniah", "section": 1, "chapters": 3, "verses": 53}, {"slug": "haggai", "he": "חגי", "en": "Haggai", "section": 1, "chapters": 2, "verses": 38}, {"slug": "zechariah", "he": "זכריה", "en": "Zechariah", "section": 1, "chapters": 14, "verses": 211}, {"slug": "malachi", "he": "מלאכי", "en": "Malachi", "section": 1, "chapters": 3, "verses": 55}, {"slug": "psalms", "he": "תהילים", "en": "Psalms", "section": 2, "chapters": 150, "verses": 2527}, {"slug": "proverbs", "he": "משלי", "en": "Proverbs", "section": 2, "chapters": 31, "verses": 915}, {"slug": "job", "he": "איוב", "en": "Job", "section": 2, "chapters": 42, "verses": 1070}, {"slug": "song_of_songs", "he": "שיר השירים", "en": "Song of Songs", "section": 2, "chapters": 8, "verses": 117}, {"slug": "ruth", "he": "רות", "en": "Ruth", "section": 2, "chapters": 4, "verses": 85}, {"slug": "lamentations", "he": "איכה", "en": "Lamentations", "section": 2, "chapters": 5, "verses": 154}, {"slug": "ecclesiastes", "he": "קהלת", "en": "Ecclesiastes", "section": 2, "chapters": 12, "verses": 222}, {"slug": "esther", "he": "אסתר", "en": "Esther", "section": 2, "chapters": 10, "verses": 167}, {"slug": "daniel", "he": "דניאל", "en": "Daniel", "section": 2, "chapters": 12, "verses": 357}, {"slug": "ezra", "he": "עזרא", "en": "Ezra", "section": 2, "chapters": 10, "verses": 280}, {"slug": "nehemiah", "he": "נחמיה", "en": "Nehemiah", "section": 2, "chapters": 13, "verses": 405}, {"slug": "i_chronicles", "he": "דברי הימים א", "en": "I Chronicles", "section": 2, "chapters": 29, "verses": 943}, {"slug": "ii_chronicles", "he": "דברי הימים ב", "en": "II Chronicles", "section": 2, "chapters": 36, "verses": 822}];var bk=books.find(function(b){return b.slug==slug});
+var vs=document.getElementById("vs"),sel=document.getElementById("ch");
+function hn(n){var O=["","א","ב","ג","ד","ה","ו","ז","ח","ט"],T=["","י","כ","ל","מ","נ","ס","ע","פ","צ"],H=["","ק","ר","ש","ת","תק","תר","תש","תת","תתק"];if(n==15)return"ט״ו";if(n==16)return"ט״ז";var l=H[Math.floor(n/100)]+T[Math.floor(n%100/10)]+O[n%10];return l.length==1?l+"׳":l.slice(0,-1)+"״"+l.slice(-1)}
+function ls(k,d){try{var v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}}
+function ss(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+if(!bk){vs.textContent="ספר נישט געפונען. גייט צוריק צו די ספרים.";return}
+document.getElementById("ttl").textContent=bk.he;document.title=bk.he+" · נ״ך מיט ייִדיש";
+if(!(ch>=1&&ch<=bk.chapters))ch=1;
+var size=ls("nach:size",1.25),yi=ls("nach:yi",true),data=null,mark=ls("nach:mark",null),jump=vq!==null&&vq!==""?parseInt(vq,10):null;
+for(var i=1;i<=bk.chapters;i++){var o=document.createElement("option");o.value=i;o.textContent="קאפיטל "+hn(i);sel.appendChild(o)}
+function nav(){return '<div class="pg2"><button data-d="-1"'+(ch<=1?" disabled":"")+'>→ פריערדיקער</button><span>'+hn(ch)+" / "+hn(bk.chapters)+'</span><button data-d="1"'+(ch>=bk.chapters?" disabled":"")+'>נעקסטער ←</button></div>'}
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;")}
+function draw(){sel.value=ch;if(!data)return;var vv=data[ch-1]||[];var h=nav();
+vv.forEach(function(p,i){var m=mark&&mark.b==slug&&mark.c==ch&&mark.v==i;h+='<div class="v'+(m?" mk":"")+'" id="v'+i+'"><p class="he" style="font-size:'+size+'rem"><button class="n" data-i="'+i+'" aria-label="צייכן דא">'+(m?"🔖":hn(i+1))+'</button>'+esc(p[0])+'</p>'+(yi&&p[1]?'<p class="yi" style="font-size:'+(size*.84).toFixed(2)+'rem">'+esc(p[1])+'</p>':"")+'</div>'});
+vs.className="";vs.innerHTML=h+nav();document.getElementById("yb").className=yi?"on":"";
+if(jump!==null&&document.getElementById("v"+jump)){document.getElementById("v"+jump).scrollIntoView({block:"center"});jump=null}else window.scrollTo(0,0)}
+function go(n){ch=n;jump=null;history.replaceState(null,"","?b="+slug+"&c="+ch);ss("nach:last",{b:slug,c:ch});draw()}
+sel.onchange=function(){go(+sel.value)};
+vs.onclick=function(e){var t=e.target;if(t.dataset.d){go(ch+ +t.dataset.d)}else if(t.dataset.i!==undefined){mark={b:slug,c:ch,v:+t.dataset.i};ss("nach:mark",mark);draw();var el=document.getElementById("v"+t.dataset.i);if(el)el.scrollIntoView({block:"center"})}};
+document.getElementById("zm").onclick=function(){size=Math.min(2.2,+(size+.1).toFixed(2));ss("nach:size",size);draw()};
+document.getElementById("zo").onclick=function(){size=Math.max(.9,+(size-.1).toFixed(2));ss("nach:size",size);draw()};
+document.getElementById("yb").onclick=function(){yi=!yi;ss("nach:yi",yi);draw()};
+if(qs.get("c")===null){var last=ls("nach:last",null);if(last&&last.b==slug){ch=last.c}}
+fetch("/nach/data/"+slug+".json").then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(d){data=d;ss("nach:last",{b:slug,c:ch});draw()}).catch(function(){vs.innerHTML='דער טעקסט האט זיך נישט געלאדנט. <a href="">פרובירט נאך א מאל</a>'});
+})();
+</script></body></html>
